@@ -1,9 +1,9 @@
 name: Github-Agent CI-CD Pipeline
 
 on:
- # push:
-  #  branches: ["main"]
- # pull_request:
+  push:
+    branches: ["Github_agent"]
+  pull_request:
   workflow_dispatch:
 
 env:
