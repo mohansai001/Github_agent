@@ -32,20 +32,13 @@ jobs:
 
       - name: Create Deployment Package
         run: |
-          mkdir deploy
+          zip -r app.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "__pycache__/*" \
+            -x "*.pyc"
 
-          cp main.py deploy/
-          cp api.py deploy/
-          cp github_agent.py deploy/
-          cp requirements.txt deploy/
-          cp __init__.py deploy/
-
-          cp -r github_tools deploy/
-
-          cd deploy
-          zip -r ../app.zip .
-
-      - name: Upload Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: python-app
@@ -91,7 +84,7 @@ jobs:
     environment: production
 
     steps:
-      - name: Download Artifact
+      - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: python-app
