@@ -7,7 +7,7 @@ router = APIRouter()
 security = HTTPBearer()
 
 @router.post("/github_agent")
-async def github_agent_call(request: github_agent_request , authorization: str ): #, authorization: HTTPAuthorizationCredentials = Depends(security)):
+async def github_agent_call(request: github_agent_request): #, authorization: HTTPAuthorizationCredentials = Depends(security)):
     # print("SCHEME:", authorization.scheme)
     # print("AUTH:", authorization.credentials)
 
@@ -16,7 +16,7 @@ async def github_agent_call(request: github_agent_request , authorization: str )
     #         status_code=401,
     #         detail="Missing token"
     #     )
-    git_token = authorization # .credentials #.replace("Bearer ", "")
+    git_token = request.pat_token # .credentials #.replace("Bearer ", "")
     print(f"Token received: {git_token}")
     prompt = request.prompt
 
