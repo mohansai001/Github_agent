@@ -12,6 +12,7 @@ from github_tools.base_trail import (
 )
 from vida.utils.prompt_manager_v2 import AgentDescriptionPrompt, AgentInstructionPrompt, ToolFieldsPrompt
 from vida.utils.logger import get_logger
+from github_tools.mcp_tool import github_mcp_tool
 
 logger = get_logger(__name__)
 
@@ -24,11 +25,11 @@ class GithubContext:
 class GithubAgent(Base_Agent):   
     name = "github_agent"
     instructions = str(AgentInstructionPrompt("github-agent-instructions"))
-    tools = [
-        get_user, commit_files, read_file,
-        list_branches, create_branch, list_commits, list_workflows,
-        create_pull_request, create_issue, create_release,
-    ]
+    tools = [ get_user ] 
+    #     , commit_files, read_file,
+    #     list_branches, create_branch, list_commits, list_workflows,
+    #     create_pull_request, create_issue, create_release,
+    # ]
 
 _git_agent_field = ToolFieldsPrompt("git-agent-field-description")
 
@@ -39,7 +40,9 @@ async def github_agent(prompt: Annotated[str, Field(description = _git_agent_fie
     logger.debug(f"[github_agent] Prompt: {prompt}")
     print(f"[github_agent] Prompt: {prompt}")
     try:
-        result = await GithubAgent.get_instance().run(prompt) #type: ignore
+        async with github_mcp_tool() as mcp:
+            result = await GithubAgent.get_instance().run(prompt, tools=[mcp])
+        # result = await GithubAgent.get_instance().run(prompt) #type: ignore
         logger.info("[github_agent] Successfully generated GitHub agent output.")
         print("[github_agent] Successfully generated GitHub agent output.")
         logger.debug(f"[github_agent] Output: {result}")
