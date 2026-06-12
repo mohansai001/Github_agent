@@ -22,7 +22,7 @@ _git_commit_fields = ToolFieldsPrompt("git-commit-field-description")
 @tool(
     name="commit_files",
     description=str(ToolDescriptionPrompt("git-commit-tool-description")),
-    approval_mode="never_required"
+    approval_mode="never_require"
 )
 def commit_files(
     repo: Annotated[str, Field(description=_git_commit_fields.get("repo"))],
@@ -68,8 +68,7 @@ async def set_secret(
 
 # ── New tools from GitHubAPIWrapper (base.py) ─────────────────────────────────
 
-from adapters.github.base import GitHubAPIWrapper
-from utils.config import github_token as GITHUB_TOKEN
+from vida.adapters.github.base import GitHubAPIWrapper
 
 def _get_wrapper() -> GitHubAPIWrapper:
     return GitHubAPIWrapper()
@@ -125,7 +124,7 @@ def list_commits(
 
         return [
             {"sha": c.sha[:7], "message": c.commit.message.splitlines()[0], "author": c.commit.author.name}
-            for c in list(commits)[:10]
+            for c in list(commits)[:10] #type: ignore
         ]
     except Exception as e:
         # logger.error(f"[list_commits] Error occurred: {e}", exc_info=True)

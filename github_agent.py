@@ -34,20 +34,22 @@ class GithubAgent(Base_Agent):
 _git_agent_field = ToolFieldsPrompt("git-agent-field-description")
 
 @tool(name="Github_Agent", description=str(AgentDescriptionPrompt("github-agent-description")), approval_mode="never_require")
-async def github_agent(prompt: Annotated[str, Field(description = _git_agent_field.get("prompt"))]):
+async def github_agent(): #prompt: Annotated[str, Field(description = _git_agent_field.get("prompt"))]):
     logger.info("[github_agent] Called with prompt.")
     print("[github_agent] Called with prompt.")
-    logger.debug(f"[github_agent] Prompt: {prompt}")
-    print(f"[github_agent] Prompt: {prompt}")
+    # logger.debug(f"[github_agent] Prompt: {prompt}")
+    # print(f"[github_agent] Prompt: {prompt}")
     try:
-        async with github_mcp_tool() as mcp:
-            result = await GithubAgent.get_instance().run(prompt, tools=[mcp])
+        agent = GithubAgent.get_instance()
+        # if agent._session != None:
+        print(vars(agent._session))
+        print(agent._session)
+        # async with github_mcp_tool() as mcp:
+        #     result = await agent.run(prompt, tools=[mcp]) #type: ignore
         # result = await GithubAgent.get_instance().run(prompt) #type: ignore
         logger.info("[github_agent] Successfully generated GitHub agent output.")
         print("[github_agent] Successfully generated GitHub agent output.")
-        logger.debug(f"[github_agent] Output: {result}")
-        print(f"[github_agent] Output: {result}")
-        return result
+        return agent
     except Exception as e:
         logger.error(f"[github_agent] Error occurred: {e}", exc_info=True)
         print(f"[github_agent] Error occurred: {e}")
