@@ -1,7 +1,10 @@
 #!/bin/bash
 
-echo "Checking environment variable..."
-echo "Azure_Secrets_URL=$Azure_Secrets_URL"
+echo "===== ENVIRONMENT VARIABLES ====="
+env | sort
+echo "================================"
+
+sleep 300
 
 echo "Starting GitHub MCP Server..."
 npx @modelcontextprotocol/server-github &
