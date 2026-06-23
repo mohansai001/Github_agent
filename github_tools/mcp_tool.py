@@ -20,12 +20,11 @@ logger = get_logger(__name__)
 
 
 
-
+from vida.utils.config import github_token 
 
 @asynccontextmanager
 async def github_mcp_tool():
-    token = github_pat_ctx.get(None) or os.getenv("GITHUB_TOKEN")
-    print(f"GitHub token from context: {github_pat_ctx.get(None)}, from env: {os.getenv('GITHUB_TOKEN')}")
+    token = github_pat_ctx.get(None) or github_token
     # if not token:
     #     raise RuntimeError("GitHub token not found in context or environment")
 

@@ -4,6 +4,8 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials #type: ign
 from vida.utils.request_context import github_pat_ctx
 from github_agent import github_agent
 from github_tools.mcp_tool import github_mcp_tool
+from vida.utils.preprocess import try_parse_json
+
 router = APIRouter()
 security = HTTPBearer()
 
@@ -18,7 +20,7 @@ async def github_agent_call(request: github_agent_request): #, authorization: HT
     #         detail="Missing token"
     #     )
     git_token = request.pat_token # .credentials #.replace("Bearer ", "")
-    print(f"Token received: {git_token}")
+    # print(f"Token received: {git_token}")
     prompt = request.prompt
 
     token_ref = github_pat_ctx.set(git_token) #type: ignore
@@ -28,9 +30,14 @@ async def github_agent_call(request: github_agent_request): #, authorization: HT
         async with github_mcp_tool() as mcp:
             response = await agent.run(prompt, tools=[mcp],session=session)
 
+        # mcp= github_agent()
+        # response = await agent.run(prompt, tools=[mcp],session=session)
+        output, is_json = try_parse_json(response.text)
         return {
             "response": f"Github agent executed successfully",
-            "agent_output": response
+            "raw": response,
+            "is_json": is_json,
+            "output": output
         }
 
     finally:
