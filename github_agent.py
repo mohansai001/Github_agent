@@ -6,7 +6,7 @@ from agent_framework import tool #type: ignore
 from typing import Annotated
 from pydantic import Field
 from github_tools.base_trail import (
-    get_user, commit_files, read_file, set_secret,
+    get_user, monitor_workflows, commit_files, read_file, set_secret,
     list_branches, create_branch, list_commits, list_workflows,
     create_pull_request, create_issue, create_release, 
 )
@@ -25,7 +25,7 @@ class GithubContext:
 class GithubAgent(Base_Agent):   
     name = "github_agent"
     instructions = str(AgentInstructionPrompt("github-agent-instructions"))
-    tools = [ get_user ] 
+    tools = [ get_user, monitor_workflows ] 
     #     , commit_files, read_file,
     #     list_branches, create_branch, list_commits, list_workflows,
     #     create_pull_request, create_issue, create_release,

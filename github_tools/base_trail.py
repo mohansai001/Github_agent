@@ -15,6 +15,17 @@ def get_user():
     return user
 
 
+
+_workflow_fields = ToolFieldsPrompt("git-wait-workflow-field-description")
+@tool(name="Monitor_workflows", description=str(ToolDescriptionPrompt("git-monitor-workflows-tool-description")), approval_mode="never_require")
+def monitor_workflows(
+    repo_name: Annotated[str, Field(description=_workflow_fields.get("repo_name"))],
+    workflow_file_name: Annotated[str, Field(description=_workflow_fields.get("workflow_file_name"))],
+    branch: Annotated[str, Field(description=_workflow_fields.get("branch"))]
+):
+    return wait_for_latest_workflow(repo_name=repo_name, workflow_file_name=workflow_file_name, branch=branch)
+
+
 # ── commit_files ──────────────────────────────────────────────────────────────
 
 _git_commit_fields = ToolFieldsPrompt("git-commit-field-description")
