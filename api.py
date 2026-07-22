@@ -42,3 +42,11 @@ async def github_agent_call(request: github_agent_request): #, authorization: HT
 
     finally:
         github_pat_ctx.reset(token_ref)
+
+from vida.adapters.github.git_action import git_dispatch_workflow
+from vida.utils.github_client import get_github_client
+
+@router.get("/github_agent/test_dispatch_workflow")
+async def test_dispatch_workflow():
+    git_dispatch_workflow("Hari-var/test1","pipeline.yml", "/fix/probable-solutions-20260706",g=get_github_client("s"))
+    return ("workflow dispatched successfully")

@@ -231,4 +231,17 @@ def create_release(
     release = _get_wrapper().create_git_release(repo_full_name, tag=tag, name=name, message=message, draft=draft, prerelease=prerelease)
     return {"id": release.id, "url": release.html_url, "tag": release.tag_name}
 
+from vida.adapters.github.git_action import git_dispatch_workflow
+from typing import Optional
 
+_git_dispatch_workflow_fields = ToolFieldsPrompt("git-dispatch-workflow-field-description")
+
+@tool(name="dispatch_workflow", description=str(ToolDescriptionPrompt("git-dispatch-workflow-tool-description")), approval_mode="never_require")
+def dispatch_workflow(
+    repo_full_name: Annotated[str, Field(description=_git_dispatch_workflow_fields.get("repo_full_name"))],
+    workflow_file: Annotated[str, Field(description=_git_dispatch_workflow_fields.get("workflow_file"))],
+    ref: Annotated[str, Field(description=_git_dispatch_workflow_fields.get("ref"))],
+    inputs: Optional[Annotated[dict, Field(description=_git_dispatch_workflow_fields.get("inputs"))]] = None,
+):
+    git_dispatch_workflow(repo_full_name, workflow_file, ref, inputs)
+    return ("workflow dispatched successfully")
