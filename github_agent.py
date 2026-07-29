@@ -28,7 +28,7 @@ class GithubAgent(Base_Agent):
     model = git_config.model
     AI_endpoint = git_config.AI_endpoint
     instructions = str(AgentInstructionPrompt("github-agent-instructions"))
-    tools = [ get_user, monitor_workflows, dispatch_workflow ] 
+    tools = [ get_user, monitor_workflows, dispatch_workflow, set_secret] 
     #     , commit_files, read_file,
     #     list_branches, create_branch, list_commits, list_workflows,
     #     create_pull_request, create_issue, create_release,
@@ -48,7 +48,7 @@ async def github_agent(): #prompt: Annotated[str, Field(description = _git_agent
         print(vars(agent._session))
         print(agent._session)
         # async with github_mcp_tool() as mcp:
-        #     result = await agent.run(prompt, tools=[mcp]) #type: ignore
+            # result = await agent.run(prompt, tools=[mcp]) #type: ignore
         # result = await GithubAgent.get_instance().run(prompt) #type: ignore
         logger.info("[github_agent] Successfully generated GitHub agent output.")
         print("[github_agent] Successfully generated GitHub agent output.")
