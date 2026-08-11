@@ -24,7 +24,7 @@ from vida.utils.config import github_token
 
 @asynccontextmanager
 async def github_mcp_tool():
-    token = github_pat_ctx.get(None) or github_token
+    token = github_pat_ctx.get(  ) or github_token
     # if not token:
     #     raise RuntimeError("GitHub token not found in context or environment")
 
